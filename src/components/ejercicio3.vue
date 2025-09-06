@@ -2,7 +2,7 @@
   <v-card>
     <v-layout>
       <v-app-bar color="primary">
-        
+
         <v-card-text class="d-flex justify-start">
           <v-text-field v-model="search" append-inner-icon="mdi-magnify" density="compact" label="Buscar productos"
             variant="solo" hide-details single-line style="width: 100%;" />
@@ -10,38 +10,33 @@
         <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       </v-app-bar>
 
-      <v-navigation-drawer
-  v-model="drawer"
-  :location="$vuetify.display.mobile ? 'bottom' : 'right'"
-  temporary
-  width="400"
->
-  <v-card width="100%">
-    <v-list>
-      <v-list-item v-for="item in carrito" :key="item.id"  >
-        <v-list-item-content>
-          <v-row text-align="center" justify="space-between">
-            <v-col cols="auto">
-              <v-list-item-title>{{ item.nombre }}</v-list-item-title>
-              <v-list-item-subtitle>
-                Precio: ${{ item.precio }} - Cantidad: {{ item.cantidad }}
-              </v-list-item-subtitle>
-            </v-col>
-            <v-col cols="auto">
-              <v-number-input control-variant="split" v-model="item.cantidad" @update:model-value="(val) => actualizarCantidad(item, val)"></v-number-input>
-            </v-col>
-          </v-row>
-        </v-list-item-content>
-      </v-list-item>
+      <v-navigation-drawer v-model="drawer" :location="$vuetify.display.mobile ? 'bottom' : 'right'" temporary
+        width="400">
+        <v-card width="100%">
+          <v-list>
+            <v-list-item v-for="item in carrito" :key="item.id">
+              <v-row text-align="center" justify="space-between">
+                <v-col cols="auto">
+                  <v-list-item-title>{{ item.nombre }}</v-list-item-title>
+                  <v-list-item-subtitle>
+                    Precio: ${{ item.precio }} - Cantidad: {{ item.cantidad }}
+                  </v-list-item-subtitle>
+                </v-col>
+                <v-col cols="auto">
+                  <v-number-input control-variant="split" v-model="item.cantidad" :min="0"
+                    :max="products.find(p => p.id === item.id)?.stock + item.cantidad"
+                    @update:model-value="() => actualizarStock(item)"></v-number-input>
 
-      <v-list-item v-if="carrito.length === 0">
-        <v-list-item-content>
-          <v-list-item-title>El carrito está vacío</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list>
-  </v-card>
-</v-navigation-drawer>
+                </v-col>
+              </v-row>
+            </v-list-item>
+
+            <v-list-item v-if="carrito.length === 0">
+              <v-list-item-title>El carrito está vacío</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-navigation-drawer>
 
 
       <v-main style="height: 500px;">
@@ -57,8 +52,6 @@
                     Precio: ${{ producto.precio }} - Stock: {{ producto.stock }}
                   </v-list-item-subtitle>
                 </v-col>
-
-                <!-- Botón a la derecha -->
                 <v-col cols="auto">
                   <v-btn :disabled="producto.stock === 0" size="small" color="primary" style="margin: 0;"
                     @click="agregarAlCarrito(producto)">
@@ -67,12 +60,8 @@
                 </v-col>
               </v-row>
             </v-list-item>
-
-
             <v-list-item v-if="productosFiltrados.length === 0">
-              <v-list-item-content>
-                <v-list-item-title>No se encontraron productos</v-list-item-title>
-              </v-list-item-content>
+              <v-list-item-title>No se encontraron productos</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-card>
@@ -109,25 +98,36 @@ const agregarAlCarrito = (producto) => {
   const item = carrito.value.find(p => p.id === producto.id);
   if (item) {
     item.cantidad++;
+    item.cantAnt++;
   } else {
-    carrito.value.push({ ...producto, cantidad: 1 });
+    carrito.value.push({ ...producto, cantidad: 1, cantAnt: 1 });
   }
-  producto.stock--; // reducimos stock
+  producto.stock--;
 };
-
-const actualizarCantidad = (item, nuevaCantidad) => {
+const actualizarStock = (item) => {
   const producto = products.value.find(p => p.id === item.id);
   if (!producto) return;
 
-  const diferencia = item.cantidad - nuevaCantidad; // cantidad que se libera o se toma del stock
-  producto.stock += diferencia; 
-  item.cantidad = nuevaCantidad;
+  const diferencia = item.cantidad - item.cantAnt;
 
-  if (item.cantidad <= 0) {
-    carrito.value = carrito.value.filter(p => p.id !== item.id);
+  if (diferencia > 0) {
+
+    if (producto.stock >= diferencia) {
+      producto.stock -= diferencia;
+    } else {
+      alert("No hay suficiente stock.");
+      item.cantidad = item.cantAnt;
+      return;
+    }
+  } else if (diferencia < 0) {
+
+    producto.stock += Math.abs(diferencia);
+    if (item.cantidad <= 0) {
+      carrito.value = carrito.value.filter(p => p.id !== item.id);
+    }
   }
+  item.cantAnt = item.cantidad;
 };
-
 
 const drawer = ref(false)
 const group = ref(null)

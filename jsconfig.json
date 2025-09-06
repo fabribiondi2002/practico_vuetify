@@ -16,5 +16,9 @@
       "dom.iterable",
       "scripthost"
     ]
+  },
+  "vueCompilerOptions": {
+    "target": 3.5,
+    "globalTypesPath": "./node_modules/@vue/runtime-core/dist/index.d.ts"
   }
 }

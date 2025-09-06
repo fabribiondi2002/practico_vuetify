@@ -12,6 +12,7 @@ declare module 'vue' {
     Ejercicio1: typeof import('./src/components/ejercicio1.vue')['default']
     Ejercicio2: typeof import('./src/components/ejercicio2.vue')['default']
     Ejercicio3: typeof import('./src/components/ejercicio3.vue')['default']
+    Ejercicio4: typeof import('./src/components/Ejercicio4.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
