@@ -1,88 +1,47 @@
+<route lang="yaml">
+meta:
+  layout: home
+</route>
 <template>
-    <home>
-        <v-card style="width: 100%; height: 100vh;">
-            <v-layout>
-                <v-app-bar color="primary">
-
-                    <v-card-text class="d-flex justify-start">
-                        <v-text-field v-model="search" append-inner-icon="mdi-magnify" density="compact"
-                            label="Buscar productos" variant="solo" hide-details single-line style="width: 100%;" />
-                    </v-card-text>
-                    <v-btn icon @click.stop="drawer = !drawer">
-                        <v-icon>mdi-cart</v-icon>
-                    </v-btn> </v-app-bar>
-
-                <v-navigation-drawer v-model="drawer" :location="$vuetify.display.mobile ? 'bottom' : 'right'" temporary
-                    width="400">
-                    <v-card width="100%">
-                        <v-list>
-                            <v-list-item v-for="item in carrito" :key="item.id">
-                                <v-row text-align="center" justify="space-between">
-                                    <v-col cols="auto">
-                                        <v-list-item-title>{{ item.nombre }}</v-list-item-title>
-                                        <v-list-item-subtitle>
-                                            Precio: ${{ item.precio }} - Cantidad: {{ item.cantidad }}
-                                        </v-list-item-subtitle>
-                                    </v-col>
-                                    <v-col cols="auto">
-                                        <v-number-input control-variant="split" v-model="item.cantidad" :min="0"
-                                            :max="products.find(p => p.id === item.id)?.stock + item.cantidad"
-                                            @update:model-value="() => actualizarStock(item)"></v-number-input>
-
-                                    </v-col>
-                                </v-row>
-                            </v-list-item>
-
-                            <v-list-item v-if="carrito.length === 0">
-                                <v-list-item-title>El carrito está vacío</v-list-item-title>
-                            </v-list-item>
-                        </v-list>
-                    </v-card>
-                </v-navigation-drawer>
+    <v-card-text class="d-flex justify-start">
+        <v-text-field v-model="search" append-inner-icon="mdi-magnify" density="compact" label="Buscar productos"
+            variant="solo" hide-details single-line style="width: 100%;" />
+    </v-card-text>
+    <v-card class="d-flex">
+        <v-list width="100%" style="overflow-y: auto; max-height: 100%; min-height: 100 em; flex-grow: 1;">
+            <v-list-item v-for="producto in productosFiltrados" :key="producto.id">
+                <v-card outlined class="pa-2 mb-2">
+                    <v-row align="center" justify="space-between">
+                        <v-col cols="auto">
+                            <v-list-item-title>{{ producto.nombre }}</v-list-item-title>
+                            <v-list-item-subtitle>
+                                Precio: ${{ producto.precio }} - Stock: {{ producto.stock }}
+                            </v-list-item-subtitle>
+                        </v-col>
+                        <v-col cols="auto">
+                            <v-btn block :disabled="producto.stock === 0" size="small" color="primary"
+                                style="margin: 0;" @click="agregarAlCarrito(producto)">
+                                Agregar al carrito
+                            </v-btn>
+                            <v-divider class="my-1"></v-divider>
+                            <v-btn block size="small" color="primary" style="margin: 0;"
+                                :to="`/products/${producto.id}`">
+                                Ver detalles
+                            </v-btn>
+                        </v-col>
+                    </v-row>
+                </v-card>
+            </v-list-item>
+            <v-list-item v-if="productosFiltrados.length === 0">
+                <v-list-item-title>No se encontraron productos</v-list-item-title>
+            </v-list-item>
+        </v-list>
+    </v-card>
 
 
-                <v-main>
-                    <v-card class="d-flex" style="margin-left: 16px;" max-width="100%">
-                        <v-list width="100%" style="overflow-y: auto; max-height: 800px;">
-                            <v-list-item v-for="producto in productosFiltrados" :key="producto.id">
-                                <v-card outlined class="pa-2 mb-2">
-                                    <v-row align="center" justify="space-between">
-                                        <!-- Texto a la izquierda -->
-                                        <v-col cols="auto">
-                                            <v-list-item-title>{{ producto.nombre }}</v-list-item-title>
-                                            <v-list-item-subtitle>
-                                                Precio: ${{ producto.precio }} - Stock: {{ producto.stock }}
-                                            </v-list-item-subtitle>
-                                        </v-col>
-                                        <v-col cols="auto">
-                                            <v-btn block :disabled="producto.stock === 0" size="small" color="primary"
-                                                style="margin: 0;" @click="agregarAlCarrito(producto)">
-                                                Agregar al carrito
-                                            </v-btn>
-                                            <v-divider class="my-1"></v-divider>
-                                            <v-btn block size="small" color="primary" style="margin: 0;"
-                                                :to="`/products/${producto.id}`">
-                                                Ver detalles
-                                            </v-btn>
-                                        </v-col>
-                                    </v-row>
-                                </v-card>
-                            </v-list-item>
-                            <v-list-item v-if="productosFiltrados.length === 0">
-                                <v-list-item-title>No se encontraron productos</v-list-item-title>
-                            </v-list-item>
-                        </v-list>
-                    </v-card>
-                </v-main>
-            </v-layout>
-        </v-card>
-    </home>
 </template>
-
-
 <script setup>
 import { ref, computed, watch } from "vue";
-import home from "@/layouts/home.vue";
 
 const search = ref("");
 const products = ref([
