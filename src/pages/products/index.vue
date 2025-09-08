@@ -1,105 +1,60 @@
+<template>
+    <v-card class="d-flex flex-column">
+        <v-card-text class="d-flex justify-start">
+            <v-text-field v-model="productStore.search" @update:model-value="productStore.page = 1"
+                append-inner-icon="mdi-magnify" density="compact" label="Buscar productos" variant="solo" hide-details
+                single-line style="width: 100%;" />
+        </v-card-text>
+        <v-list width="100%" style="overflow-y: auto; min-height: calc(100vh - 495.41px );">
+            <v-list-item v-for="producto in productStore.paginatedProducts" :key="producto.id">
+                <v-hover v-slot="{ isHovering, props }">
+                    <v-card outlined class="pa-2 mb-2" v-bind="props"
+                        :color="isHovering ? 'primary-lighten-3' : undefined"
+                        @click="$router.push('/products/' + producto.id)" style="cursor: pointer">
+                        <v-row align="center" justify="space-between">
+                            <v-col cols="auto">
+                                <v-list-item-title>{{ producto.nombre }}</v-list-item-title>
+                                <v-list-item-subtitle>
+                                    Precio: ${{ producto.precio }} - Stock: {{ producto.stock }}
+                                </v-list-item-subtitle>
+                            </v-col>
+                            <v-col cols="auto" >
+                                <v-btn block :disabled="producto.stock === 0" size="small" color="primary" 
+                                @click.stop="productStore.agregarAlCarrito(producto)">
+                                    Agregar al carrito
+                                </v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-card>
+                </v-hover>
+            </v-list-item>
+            <v-list-item v-if="productStore.productosFiltrados.length === 0">
+                <v-list-item-title>No se encontraron productos</v-list-item-title>
+            </v-list-item>
+        </v-list>
+        <v-divider></v-divider>
+        <div class="text-center">
+            <v-container>
+                <v-row justify="center">
+                    <v-col cols="8">
+                        <v-container style="padding: 0;">
+                            <v-pagination v-model="productStore.page"
+                                :length="Math.ceil(productStore.productosFiltrados.length / productStore.itemsPerPage)"
+                                class="my-4"></v-pagination>
+                        </v-container>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </div>
+    </v-card>
+</template>
+
+<script setup>
+import { useProductStore } from '@/stores/products.js';
+const productStore = useProductStore();
+</script>
+
 <route lang="yaml">
 meta:
   layout: home
 </route>
-<template>
-    <v-card-text class="d-flex justify-start">
-        <v-text-field v-model="search" append-inner-icon="mdi-magnify" density="compact" label="Buscar productos"
-            variant="solo" hide-details single-line style="width: 100%;" />
-    </v-card-text>
-    <v-card class="d-flex">
-        <v-list width="100%" style="overflow-y: auto; max-height: 100%; min-height: 100 em; flex-grow: 1;">
-            <v-list-item v-for="producto in productosFiltrados" :key="producto.id">
-                <v-card outlined class="pa-2 mb-2">
-                    <v-row align="center" justify="space-between">
-                        <v-col cols="auto">
-                            <v-list-item-title>{{ producto.nombre }}</v-list-item-title>
-                            <v-list-item-subtitle>
-                                Precio: ${{ producto.precio }} - Stock: {{ producto.stock }}
-                            </v-list-item-subtitle>
-                        </v-col>
-                        <v-col cols="auto">
-                            <v-btn block :disabled="producto.stock === 0" size="small" color="primary"
-                                style="margin: 0;" @click="agregarAlCarrito(producto)">
-                                Agregar al carrito
-                            </v-btn>
-                            <v-divider class="my-1"></v-divider>
-                            <v-btn block size="small" color="primary" style="margin: 0;"
-                                :to="`/products/${producto.id}`">
-                                Ver detalles
-                            </v-btn>
-                        </v-col>
-                    </v-row>
-                </v-card>
-            </v-list-item>
-            <v-list-item v-if="productosFiltrados.length === 0">
-                <v-list-item-title>No se encontraron productos</v-list-item-title>
-            </v-list-item>
-        </v-list>
-    </v-card>
-
-
-</template>
-<script setup>
-import { ref, computed, watch } from "vue";
-
-const search = ref("");
-const products = ref([
-    { id: 1, nombre: "Jabon", precio: 100, stock: 10 }, { id: 2, nombre: "Papel higienico", precio: 200, stock: 5 }, { id: 3, nombre: "Pasta dental", precio: 300, stock: 0 }, { id: 4, nombre: "Shampoo", precio: 450, stock: 8 }, { id: 5, nombre: "Acondicionador", precio: 400, stock: 6 }, { id: 6, nombre: "Cepillo de dientes", precio: 150, stock: 12 }, { id: 7, nombre: "Desodorante", precio: 350, stock: 7 }, { id: 8, nombre: "Toallas sanitarias", precio: 250, stock: 15 }, { id: 9, nombre: "Jabon liquido", precio: 180, stock: 9 }, { id: 10, nombre: "Cotonetes", precio: 80, stock: 20 }, { id: 11, nombre: "Crema humectante", precio: 500, stock: 4 }, { id: 12, nombre: "Pasta de manos", precio: 220, stock: 10 }, { id: 13, nombre: "Alcohol en gel", precio: 300, stock: 5 }, { id: 14, nombre: "Limpiador facial", precio: 350, stock: 6 }, { id: 15, nombre: "Jabon exfoliante", precio: 200, stock: 8 }
-]);
-const carrito = ref([]);
-
-
-const productosFiltrados = computed(() =>
-    products.value.filter((producto) =>
-        producto.nombre.toLowerCase().includes(search.value.toLowerCase())
-    )
-);
-const agregarAlCarrito = (producto) => {
-    if (producto.stock <= 0) {
-        alert("No hay suficiente stock.");
-        return;
-    }
-
-    const item = carrito.value.find(p => p.id === producto.id);
-    if (item) {
-        item.cantidad++;
-        item.cantAnt++;
-    } else {
-        carrito.value.push({ ...producto, cantidad: 1, cantAnt: 1 });
-    }
-    producto.stock--;
-};
-const actualizarStock = (item) => {
-    const producto = products.value.find(p => p.id === item.id);
-    if (!producto) return;
-
-    const diferencia = item.cantidad - item.cantAnt;
-
-    if (diferencia > 0) {
-
-        if (producto.stock >= diferencia) {
-            producto.stock -= diferencia;
-        } else {
-            alert("No hay suficiente stock.");
-            item.cantidad = item.cantAnt;
-            return;
-        }
-    } else if (diferencia < 0) {
-
-        producto.stock += Math.abs(diferencia);
-        if (item.cantidad <= 0) {
-            carrito.value = carrito.value.filter(p => p.id !== item.id);
-        }
-    }
-    item.cantAnt = item.cantidad;
-};
-
-const drawer = ref(false)
-const group = ref(null)
-
-watch(group, () => {
-    drawer.value = false
-})
-
-</script>
