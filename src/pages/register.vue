@@ -32,7 +32,7 @@
 
   <!-- Diálogo -->
   <v-dialog v-model="dialog" transition="dialog-bottom-transition" width="400" >
-    <v-card v-if="name.length >= 3">
+    <v-card v-if="name.length >= 3" >
       <v-toolbar color="primary" title="Registro Exitoso" dark />
       <v-card-text class="pa-6">
         ¡Bienvenido {{name}}! Tu registro fue completado.
@@ -69,6 +69,8 @@
 
 <script setup>
 import { ref } from "vue";
+import { useClientStore } from "@/stores/clients";
 const name = ref("");
 const dialog = ref(false);
+const clientStore = useClientStore();
 </script>
