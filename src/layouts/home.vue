@@ -11,8 +11,11 @@
                     <v-list-item to="/clients">
                         <p>Clientes</p>
                     </v-list-item>
-                    <v-list-item to="/account">
+                    <v-list-item to="/settings/accounts">
                         <p>Mi cuenta</p>
+                    </v-list-item>
+                    <v-list-item to="/settings">
+                        <p>Configuracion</p>
                     </v-list-item>
                 </v-list>
             </v-card>

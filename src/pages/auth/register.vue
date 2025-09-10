@@ -23,14 +23,13 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="success" @click="dialog = true">
+      <v-btn color="success" @click="dialog = true, addClient()">
         Registrarse
         <v-icon icon="mdi-chevron-right" end />
       </v-btn>
     </v-card-actions>
   </v-card>
 
-  <!-- Diálogo -->
   <v-dialog v-model="dialog" transition="dialog-bottom-transition" width="400" >
     <v-card v-if="name.length >= 3" >
       <v-toolbar color="primary" title="Registro Exitoso" dark />
@@ -73,4 +72,10 @@ import { useClientStore } from "@/stores/clients";
 const name = ref("");
 const dialog = ref(false);
 const clientStore = useClientStore();
+const addClient = () => {
+
+  if (name.value.length >= 3) {
+    clientStore.addClient(name.value);
+  }
+};
 </script>
