@@ -1,4 +1,5 @@
 <route lang="yaml">
+name: product-details
 meta:
   layout: home
 </route>
@@ -12,7 +13,7 @@ meta:
         <p><strong>Stock:</strong> {{ product.stock }}</p>
       </v-card-text>
       <v-card-actions>
-        <v-btn :disabled="product.stock === 0"  color="primary" style="margin: 0;"
+        <v-btn :disabled="product.stock === 0" color="primary" style="margin: 0;"
           @click="productStore.agregarAlCarrito(product)">
           Agregar al carrito
         </v-btn>

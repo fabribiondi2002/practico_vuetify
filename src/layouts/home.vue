@@ -1,20 +1,20 @@
 <template>
     <v-app>
-        <AppBar @toggle-drawer="productStore.toggleDrawer" @toggle-cart="productStore.toggleCart" />
-        
-        <v-navigation-drawer v-model="productStore.drawer" temporary right width="400">
+        <AppBar @toggle-drawer="store.toggleDrawer" @toggle-cart="productStore.toggleCart" />
+
+        <v-navigation-drawer v-model="store.drawer" temporary right width="400">
             <v-card width="100%">
                 <v-list>
-                    <v-list-item to="/products">
+                    <v-list-item :to="{ name: 'products' }">
                         <p>Productos</p>
                     </v-list-item>
-                    <v-list-item to="/clients">
+                    <v-list-item :to="{ name: 'clients' }">
                         <p>Clientes</p>
                     </v-list-item>
-                    <v-list-item to="/settings/accounts">
+                    <v-list-item :to="{ name: 'accounts' }">
                         <p>Mi cuenta</p>
                     </v-list-item>
-                    <v-list-item to="/settings">
+                    <v-list-item :to="{ name: 'settings'}">
                         <p>Configuracion</p>
                     </v-list-item>
                 </v-list>
@@ -63,8 +63,10 @@
 import AppBar from "@/components/AppBar.vue";
 import AppFooter from "@/components/AppFooter.vue";
 import { useProductStore } from '@/stores/products.js';
+import { useStore } from '@/stores/index.js';
 import { storeToRefs } from 'pinia';
 
 const productStore = useProductStore();
-const { drawer, cart ,products } = storeToRefs(productStore);
+const store = useStore();
+const { products } = storeToRefs(productStore);
 </script>

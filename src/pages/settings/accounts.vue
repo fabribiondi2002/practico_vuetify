@@ -1,5 +1,5 @@
 <route lang="yaml">
-name: settings
+name: accounts
 meta:
   layout: settings
 </route>

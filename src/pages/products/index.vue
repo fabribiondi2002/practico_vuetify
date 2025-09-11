@@ -1,3 +1,8 @@
+<route lang="yaml">
+name: products
+meta:
+  layout: home
+</route>
 <template>
     <v-card class="d-flex flex-column">
         <v-card-text class="d-flex justify-start">
@@ -10,7 +15,7 @@
                 <v-hover v-slot="{ isHovering, props }">
                     <v-card outlined class="pa-2 mb-2" v-bind="props"
                         :color="isHovering ? 'primary-lighten-3' : undefined"
-                        @click="$router.push('/products/' + producto.id)" style="cursor: pointer">
+                        :to="{ name: 'product-details', params: { id: producto.id } }" style="cursor: pointer">
                         <v-row align="center" justify="space-between">
                             <v-col cols="auto">
                                 <v-list-item-title>{{ producto.nombre }}</v-list-item-title>
@@ -53,8 +58,3 @@
 import { useProductStore } from '@/stores/products.js';
 const productStore = useProductStore();
 </script>
-
-<route lang="yaml">
-meta:
-  layout: home
-</route>
