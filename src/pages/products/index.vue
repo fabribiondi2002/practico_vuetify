@@ -2,6 +2,7 @@
 name: products
 meta:
   layout: home
+  requiresAuth: true
 </route>
 <template>
     <v-card class="d-flex flex-column">
@@ -12,27 +13,25 @@ meta:
         </v-card-text>
         <v-list width="100%" style="overflow-y: auto; min-height: calc(100vh - 495.41px );">
             <v-list-item v-for="producto in productStore.paginatedProducts" :key="producto.id">
-                <v-hover v-slot="{ isHovering, props }">
-                    <v-card outlined class="pa-2 mb-2" v-bind="props"
-                        :color="isHovering ? 'primary-lighten-3' : undefined"
-                        :to="{ name: 'product-details', params: { id: producto.id } }" style="cursor: pointer">
-                        <v-row align="center" justify="space-between">
-                            <v-col cols="auto">
-                                <v-list-item-title>{{ producto.nombre }}</v-list-item-title>
-                                <v-list-item-subtitle>
-                                    Precio: ${{ producto.precio }} - Stock: {{ producto.stock }}
-                                </v-list-item-subtitle>
-                            </v-col>
-                            <v-col cols="auto" >
-                                <v-btn block :disabled="producto.stock === 0" size="small" color="primary" 
-                                @click.stop="productStore.agregarAlCarrito(producto)">
-                                    Agregar al carrito
-                                </v-btn>
-                            </v-col>
-                        </v-row>
-                    </v-card>
-                </v-hover>
+                <v-card outlined class="pa-2 mb-2" :to="{ name: 'product-details', params: { id: producto.id } }"
+                    style="cursor: pointer">
+                    <v-row align="center" justify="space-between">
+                        <v-col cols="auto">
+                            <v-list-item-title>{{ producto.nombre }}</v-list-item-title>
+                            <v-list-item-subtitle>
+                                Precio: ${{ producto.precio }} - Stock: {{ producto.stock }}
+                            </v-list-item-subtitle>
+                        </v-col>
+                        <v-col cols="auto">
+                            <v-btn block :disabled="producto.stock === 0" size="small" color="primary"
+                                @click.prevent.stop="productStore.agregarAlCarrito(producto)">
+                                Agregar al carrito
+                            </v-btn>
+                        </v-col>
+                    </v-row>
+                </v-card>
             </v-list-item>
+
             <v-list-item v-if="productStore.productosFiltrados.length === 0">
                 <v-list-item-title>No se encontraron productos</v-list-item-title>
             </v-list-item>

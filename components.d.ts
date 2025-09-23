@@ -11,12 +11,6 @@ declare module 'vue' {
     AppBar: typeof import('./src/components/AppBar.vue')['default']
     AppBarNoCart: typeof import('./src/components/AppBarNoCart.vue')['default']
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
-    AppTopBar: typeof import('./src/components/AppTopBar.vue')['default']
-    Ejercicio1: typeof import('./src/components/ejercicio1.vue')['default']
-    Ejercicio2: typeof import('./src/components/ejercicio2.vue')['default']
-    Ejercicio3: typeof import('./src/components/ejercicio3.vue')['default']
-    Ejercicio4: typeof import('./src/components/Ejercicio4.vue')['default']
-    HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

@@ -1,20 +1,25 @@
-/**
- * router/index.ts
- *
- * Automatic routes for `./src/pages/*.vue`
- */
-
-// Composables
 import { createRouter, createWebHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 import { routes } from 'vue-router/auto-routes'
+import { useClientStore } from '@/stores/clients' // 👈 importa tu store
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: setupLayouts(routes),
 })
 
-// Workaround for https://github.com/vitejs/vite/issues/11804
+// Guard global para autenticación
+router.beforeEach((to, from, next) => {
+  const clientStore = useClientStore()
+
+  if (to.meta.requiresAuth && !clientStore.isAuthenticated) {
+    next({ name: 'login' }) // 👈 redirige al login
+  } else {
+    next()
+  }
+})
+
+// Workaround para Vite bug
 router.onError((err, to) => {
   if (err?.message?.includes?.('Failed to fetch dynamically imported module')) {
     if (localStorage.getItem('vuetify:dynamic-reload')) {

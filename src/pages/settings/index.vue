@@ -2,6 +2,7 @@
 name: settings
 meta:
   layout: settings
+  requiresAuth: true
 </route>
 <template>
     

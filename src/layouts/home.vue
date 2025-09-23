@@ -17,6 +17,9 @@
                     <v-list-item :to="{ name: 'settings'}">
                         <p>Configuracion</p>
                     </v-list-item>
+                    <v-list-item :to="{ name: 'login'}" @click="clientStore.logout()">
+                        <p>Cerrar sesion</p>
+                    </v-list-item>
                 </v-list>
             </v-card>
         </v-navigation-drawer>
@@ -63,10 +66,12 @@
 import AppBar from "@/components/AppBar.vue";
 import AppFooter from "@/components/AppFooter.vue";
 import { useProductStore } from '@/stores/products.js';
+import { useClientStore } from '@/stores/clients.js';
 import { useStore } from '@/stores/index.js';
 import { storeToRefs } from 'pinia';
 
 const productStore = useProductStore();
+const clientStore = useClientStore();
 const store = useStore();
 const { products } = storeToRefs(productStore);
 </script>

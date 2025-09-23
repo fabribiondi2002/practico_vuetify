@@ -2,6 +2,7 @@
 name: clients
 meta:
   layout: home
+  requiresAuth: true
 </route>
 <template>
     <v-card class="d-flex flex-column">

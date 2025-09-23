@@ -2,6 +2,7 @@
 name: accounts
 meta:
   layout: settings
+  requiresAuth: true
 </route>
 <template>
     

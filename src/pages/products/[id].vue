@@ -2,6 +2,7 @@
 name: product-details
 meta:
   layout: home
+  requiresAuth: true
 </route>
 <template>
   <v-toolbar-title class="white--text">Detalle del producto</v-toolbar-title>
