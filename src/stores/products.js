@@ -30,12 +30,14 @@ export const useProductStore = defineStore('products', () => {
     };
 
     const agregarAlCarrito = (producto) => {
+        
         if (producto.stock <= 0) {
             alert("No hay suficiente stock.");
             return;
         }
         const item = carrito.value.find(p => p.id === producto.id);
         if (item) {
+            item.cantAnt++;
             item.cantidad++;
         } else {
             carrito.value.push({ ...producto, cantidad: 1, cantAnt: 1 });
@@ -44,6 +46,7 @@ export const useProductStore = defineStore('products', () => {
     };
 
     const actualizarStock = (item) => {
+        
         const producto = products.value.find(p => p.id === item.id);
         if (!producto) return;
 

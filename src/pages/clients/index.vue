@@ -14,11 +14,19 @@ meta:
         <v-list width="100%" style="overflow-y: auto; min-height: calc(100vh - 495.41px );">
             <v-list-item v-for="cliente in clientStore.paginatedClients" :key="cliente.id">
                 <v-hover>
-                    <v-card outlined class="pa-2 mb-2"
-                        :color="isHovering ? 'primary-lighten-3' : undefined">
+                    <v-card outlined class="pa-2 mb-2" :color="isHovering ? 'primary-lighten-3' : undefined">
                         <v-row align="center" justify="space-between">
                             <v-col cols="auto">
-                                <v-list-item-title>{{ cliente }}</v-list-item-title>
+                                <v-list-item-title>{{ cliente.username }}</v-list-item-title>
+                                <v-list-item-subtitle>
+                                    Email: {{ cliente.email }}
+                                </v-list-item-subtitle>
+
+                            </v-col>
+                            <v-col cols="auto">
+                                <v-btn variant="tonal" @click="clientStore.removeClient(cliente)"
+                                    color="red">Eliminar</v-btn>
+
                             </v-col>
                         </v-row>
                     </v-card>

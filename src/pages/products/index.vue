@@ -3,6 +3,7 @@ name: products
 meta:
   layout: home
   requiresAuth: true
+  role: client
 </route>
 <template>
     <v-card class="d-flex flex-column">

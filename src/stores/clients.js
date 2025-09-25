@@ -42,7 +42,7 @@ export const useClientStore = defineStore('clients', () => {
             return false;
         }
         const newUser = {
-            id: Date.now(),
+            id: clients.value.length + 1,
             username,
             email,
             password
@@ -66,8 +66,8 @@ export const useClientStore = defineStore('clients', () => {
         currentUser.value = null; 
     };
 
-    const removeClient = (clientId) => {
-        clients.value = clients.value.filter(client => client.id !== clientId);
+    const removeClient = (client) => {
+        clients.value = clients.value.filter(c => c.id !== client.id);
     };
 
     const getClients = computed(() => clients.value);

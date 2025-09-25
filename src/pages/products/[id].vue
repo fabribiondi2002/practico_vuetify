@@ -30,10 +30,9 @@ import { useRoute } from "vue-router";
 import { computed } from "vue";
 import { useProductStore } from '@/stores/products.js';
 const route = useRoute();
-const productId = Number(route.params.id); // Convertimos a número
+const productId = Number(route.params.id);
 const productStore = useProductStore();
 const products = productStore.products;
-console.log(products[0]);
 const product = computed(() =>
   products.find((p) => p.id === productId)
 );

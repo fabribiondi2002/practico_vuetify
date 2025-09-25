@@ -1,25 +1,23 @@
 import { createRouter, createWebHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 import { routes } from 'vue-router/auto-routes'
-import { useClientStore } from '@/stores/clients' // 👈 importa tu store
+import { useClientStore } from '@/stores/clients' 
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: setupLayouts(routes),
 })
 
-// Guard global para autenticación
 router.beforeEach((to, from, next) => {
   const clientStore = useClientStore()
 
-  if (to.meta.requiresAuth && !clientStore.isAuthenticated) {
-    next({ name: 'login' }) // 👈 redirige al login
+  if (to.meta.requiresAuth && !clientStore.isAuthenticated ) {
+    next({ name: 'login' })
   } else {
     next()
   }
 })
 
-// Workaround para Vite bug
 router.onError((err, to) => {
   if (err?.message?.includes?.('Failed to fetch dynamically imported module')) {
     if (localStorage.getItem('vuetify:dynamic-reload')) {
